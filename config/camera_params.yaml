@@ -1,0 +1,52 @@
+camera_processor:
+  ros__parameters:
+
+    # ── Topics ──────────────────────────────────────────────────────────────
+    image_topic:       "/camera/image_raw"
+    camera_info_topic: "/camera/camera_info"
+    output_topic:      "/camera/image_processed"
+
+    # ── Calibration ─────────────────────────────────────────────────────────
+    yaml_calibration_path: ""
+    # 0.0 = no black borders (tight crop), 1.0 = all pixels visible
+    undistort_alpha: 0.0
+
+    # ── Stage 2: Bilateral denoising ────────────────────────────────────────
+    # Runs BEFORE CLAHE. Edge-preserving blur: flat areas are smoothed,
+    # sharp edges are kept. Slower than Gaussian (~8-15 ms at 1080p).
+    use_denoise:         false
+    denoise_d:           9      # filter diameter: 5=fast, 9=quality, >9=very slow
+    denoise_sigma_color: 75.0   # higher = stronger color mixing across regions
+    denoise_sigma_space: 75.0   # higher = wider spatial influence
+
+    # ── Stage 3: CLAHE ──────────────────────────────────────────────────────
+    use_clahe:        true
+    clahe_clip_limit: 1.5   # lower than default: buoy hue is the class signal — preserve color fidelity
+    clahe_tile_width:  8
+    clahe_tile_height: 8
+
+    # ── Stage 4: Sharpening (unsharp mask) ──────────────────────────────────
+    # Recovers fine texture softened by the C920 firmware at 30 fps.
+    # Runs AFTER CLAHE: sharpen the contrast-enhanced result, not raw noise.
+    use_sharpen:      false
+    sharpen_sigma:    1.0   # 0.8–1.5 works well for C920 at 1080p
+    sharpen_strength: 0.8   # 0.5=subtle, 0.8=clear, >1.2=oversharpened
+
+    # ── Stage 5: Gamma correction ────────────────────────────────────────────
+    # LUT-based: ~0 ms cost. Applied last as a global brightness curve.
+    # gamma < 1.0 → brighter shadows    (e.g. 0.8 lifts buoys in backlit water)
+    # gamma > 1.0 → darker, more punch  (e.g. 1.5 for bright overcast glare)
+    # gamma = 2.2 → linearise C920 sRGB output for linear-light algorithms
+    use_gamma: false
+    gamma:     1.0
+
+    # ── Stage 6: ML output (YOLOv11 / Jetson Nano) ───────────────────────────
+    # Letterbox-resize to ml_width × ml_height, then convert BGR → RGB.
+    # Published on ml_topic as sensor_msgs/Image with encoding RGB8.
+    # The header frame_id is extended with scale/offset metadata so the
+    # YOLO node can reproject detections back to the original frame:
+    #   "<frame_id>|s=<scale>|ox=<pad_x>|oy=<pad_y>"
+    ml_topic:       "/camera/image_ml"
+    ml_width:       640
+    ml_height:      640
+    letterbox_fill: 114   # YOLO standard padding grey (do not change unless retrained)

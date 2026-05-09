@@ -1,0 +1,40 @@
+# ── ROS2 / colcon build output ───────────────────────────────────────────────
+build/
+install/
+log/
+
+# ── CMake artefacts ──────────────────────────────────────────────────────────
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+
+# ── Compiled objects and libraries ───────────────────────────────────────────
+*.o
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.pdb
+
+# ── Calibration data (generated, not source) ─────────────────────────────────
+# Keep the template; ignore real calibration output dropped here.
+calibrationdata.tar.gz
+calibrationdata/
+
+# ── Editor / IDE ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Python bytecode (launch files, tools) ────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo

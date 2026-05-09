@@ -1,0 +1,57 @@
+# Logitech C920 Pro calibration — 1920x1080 mode
+#
+# HOW TO GENERATE YOUR OWN (recommended):
+#   1. Print the checkerboard:
+#        ros2 run camera_calibration cameracalibrator \
+#             --size 8x6 --square 0.025 \
+#             image:=/camera/image_raw camera:=/camera
+#   2. Move the checkerboard until X, Y, Size, Skew bars all turn green.
+#   3. Click Calibrate → Save. The YAML appears in /tmp/calibrationdata.tar.gz.
+#   4. Extract and replace the values below, then set yaml_calibration_path
+#      in camera_params.yaml to point to this file.
+#
+# The values below are representative for a C920 at 1080p — treat them as a
+# reasonable starting point, NOT as a substitute for your own calibration.
+
+image_width:  1920
+image_height: 1080
+
+camera_name: c920
+
+# K matrix (row-major): [fx, 0, cx, 0, fy, cy, 0, 0, 1]
+# fx/fy  = focal length in pixels
+# cx/cy  = principal point (optical centre, ideally near image centre)
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [1394.6027293299926, 0.0, 995.588450556010,
+         0.0, 1394.6027293299926, 599.326545765130,
+         0.0, 0.0, 1.0]
+
+# Brown-Conrady distortion: [k1, k2, p1, p2, k3]
+# k1, k2, k3 = radial  distortion coefficients
+# p1, p2     = tangential distortion coefficients
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [0.11480806073648083, -0.21946985653851792,
+         -0.0016338969488607814, -0.0009130205626568327,
+         0.10089971978988645]
+
+# Rectification matrix (identity for a single camera, not stereo)
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1.0, 0.0, 0.0,
+         0.0, 1.0, 0.0,
+         0.0, 0.0, 1.0]
+
+# Projection matrix P = [fx' 0 cx' Tx; 0 fy' cy' Ty; 0 0 1 0]
+# For a single camera Tx=Ty=0 and fx'/fy'/cx'/cy' match camera_matrix.
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [1394.6027293299926, 0.0, 995.588450556010, 0.0,
+         0.0, 1394.6027293299926, 599.326545765130, 0.0,
+         0.0, 0.0, 1.0, 0.0]

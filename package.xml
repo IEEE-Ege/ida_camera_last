@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd"
+            schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>ida_camera</name>
+  <version>0.1.0</version>
+  <description>
+    Camera image processing node: lens undistortion (Brown-Conrady) and
+    CLAHE contrast enhancement for the Logitech C920 Pro.
+  </description>
+  <maintainer email="yalinoner@gmail.com">Yalın Öner</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Core ROS2 node machinery -->
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
+
+  <!-- Image messages and camera calibration message -->
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+
+  <!-- Diagnostics framework (DiagnosticArray, DiagnosticStatus) -->
+  <depend>diagnostic_msgs</depend>
+
+  <!-- ROS2 <-> OpenCV bridge (converts sensor_msgs/Image to cv::Mat) -->
+  <depend>cv_bridge</depend>
+
+  <!-- OpenCV itself (undistort, CLAHE, remap) -->
+  <depend>opencv</depend>
+
+  <!-- YAML parsing for calibration file fallback -->
+  <depend>yaml-cpp</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
