@@ -85,20 +85,29 @@ ros2 param set /camera_processor <name> <value>
 ## Build
 
 ```bash
-cd ~/ros2_ws
-# symlink or copy this package into src/
-ln -s ~/ida_camera src/ida_camera
+cd ~/ida_camera
+colcon build
+source install/setup.bash
+```
 
+`build/`, `install/`, and `log/` are gitignored, so this builds in place with no separate workspace needed.
+
+If you'd rather build it as part of a larger `ros2_ws`, symlink it into `src/` instead:
+```bash
+cd ~/ros2_ws
+ln -s ~/ida_camera src/ida_camera
 colcon build --packages-select ida_camera
 source install/setup.bash
 ```
 
-Dependencies: `rclcpp`, `rclcpp_components`, `std_msgs`, `sensor_msgs`, `diagnostic_msgs`, `cv_bridge`, OpenCV, yaml-cpp.
+Dependencies: `rclcpp`, `rclcpp_components`, `std_msgs`, `sensor_msgs`, `diagnostic_msgs`, `cv_bridge`, `launch`, `launch_ros`, OpenCV, yaml-cpp.
 
 ```bash
 sudo apt install ros-$ROS_DISTRO-cv-bridge \
                  ros-$ROS_DISTRO-camera-calibration \
                  ros-$ROS_DISTRO-v4l2-camera \
+                 ros-$ROS_DISTRO-launch \
+                 ros-$ROS_DISTRO-launch-ros \
                  libopencv-dev \
                  libyaml-cpp-dev
 ```

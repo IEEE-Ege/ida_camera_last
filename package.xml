@@ -33,6 +33,10 @@
   <!-- YAML parsing for calibration file fallback -->
   <depend>yaml-cpp</depend>
 
+  <!-- Used by launch/camera_processor.launch.py -->
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
   <export>
     <build_type>ament_cmake</build_type>
   </export>
